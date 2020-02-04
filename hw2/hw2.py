@@ -1,22 +1,23 @@
 """
-Implementation of Singly Linked List
+Implementation of Doubly Linked List
 """
 
 class Node:
     """
     defines one node of the linked list
     """
-    def __init__(self, val, next):
+    def __init__(self, val, prev, next):
         """
         val: value of node
         next: pointer to next node of linked list
         """
         self.val = val
+        self.prev = prev
         self.next = next
 
-class SLL:
+class DLL:
     """
-    singly linked list
+    doubly linked list
     """
     def __init__(self, head, tail, length):
         """
@@ -65,20 +66,38 @@ class SLL:
         sum = 0
         for i in range(self.length):
             for j in range(i, self.length):
+                # print("index value: ",self.index(i).val)
                 sum += self.index(i).val*self.index(j).val
         return sum
 
 
-d = Node(20, None)
-c = Node(16, None)
-b = Node(14, c)
-a = Node(12, b)
+a = Node(10, None, None)
+b = Node(11, None, None)
 
-ll = SLL(a, c, 2)
+# d = Node(13, None)
+# c = Node(12, None)
+# b = Node(11, c)
 
-# ll.push(a)
-ll.push(d)
-# ll.push(c)
 
-print(ll.index(3).val)
-print(ll.multiplyAllPairs())
+llone = DLL(a, b, 2)
+
+# llone.insert(b, 1)
+# llone.push(d)
+
+print("length: ",llone.length)
+print("head value: ", llone.head.val)
+print("tail value: ", llone.tail.val)
+
+# for i in range(llone.length):
+    # print("List element ", i, " is ", llone.index(i).val)
+
+
+# print("result of multiplyAllPairs: ", llone.multiplyAllPairs())
+
+import pytest
+def test_function():
+    assert llone.index(2).val == 3, "push() test failed"
+
+
+
+# test_function()
