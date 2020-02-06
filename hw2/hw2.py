@@ -26,9 +26,7 @@ class DLL:
         length: integer value of number of nodes in the list
         """
         self.head = None
-        # head.next = self.index(1)
         self.tail = None
-        # self.tail.prev = self.index(self.length() -1)
         self.length = 0
     def length(self):
         """ returns length of linked list """
@@ -51,14 +49,14 @@ class DLL:
             self.head = new
             self.tail = new
         else:
+            if self.length == 1:
+                self.tail.prev = new
             new.next = self.head
-            self.head = new
             self.head.prev = new
+            self.head = new
         self.length += 1 # keep track of list length
     def insert(self, new, i):
         """  insert a new node after a given node
-        not sure if I accounted for all cases here
-        eg: if end of list, set to tail, if beginning, set to head
         """
         new.prev = self.index(i)
         if self.index(i).next is None:
@@ -66,12 +64,20 @@ class DLL:
         else:
             new.next = self.index(i).next
             new.next.prev = new
-            # self.index(i+1).prev = new <-- does same thing as above?
         self.length += 1 # keep track of list length
     def delete(self, i):
         """ deletes a node at a given index
         """
-        self.index(i-1).next = self.index(i+1)
+        before = self.index(i-1)
+        after = self.index(i+1)
+        if i == 0:
+            self.head = after
+        else:
+            before.next = after
+        if i == self.length-1:
+            self.tail = before
+        else:
+            after.prev = before
         self.length -= 1 # keep track of list length
     def multiplyAllPairs(self):
         """ sum over the product of node values for every unique combination
@@ -79,25 +85,23 @@ class DLL:
         """
         sum = 0
         for i in range(self.length):
-            for j in range(i, self.length):
-                # print("index value: ",self.index(i).val)
+            for j in range(i+1, self.length):
+                print("index value: ",self.index(i).val, ", ", self.index(j).val)
                 sum += self.index(i).val*self.index(j).val
         return sum
 
-
-a = Node(10)
-b = Node(11)
-
-# d = Node(13, None)
-# c = Node(12, None)
-# b = Node(11, c)
 
 
 llone = DLL()
 
 # llone.insert(b, 1)
-llone.push(b)
-llone.push(a)
+llone.push(Node(1))
+llone.push(Node(2))
+llone.push(Node(3))
+
+
+# llone.insert(Node(10), 1)
+
 
 print("length: ",llone.length)
 print("head value: ", llone.head.val)
@@ -107,13 +111,19 @@ print("tail value: ", llone.tail.val)
 print("tail.prev: ", llone.tail.prev)
 print("tail.next: ", llone.tail.next)
 
-# for i in range(llone.length):
-    # print("List element ", i, " is ", llone.index(i).val)
+print("\n \n")
+for i in range(llone.length):
+    print("List value ", i, " is ", llone.index(i).val)
+    print("List prev ", i, " is ", llone.index(i).prev)
+    print("List next ", i, " is ", llone.index(i).next)
+    print("\n")
 
+print("multiplyAllPairs: ", llone.multiplyAllPairs())
 
 # print("result of multiplyAllPairs: ", llone.multiplyAllPairs())
 
 import pytest
+
 def test_function():
     assert llone.index(2).val == 3, "push() test failed"
 
