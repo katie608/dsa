@@ -1,5 +1,6 @@
 """
 Implementation of Doubly Linked List
+Katie Foster
 """
 
 class Node:
@@ -62,8 +63,9 @@ class DLL:
         if self.index(i).next is None:
             self.tail = new
         else:
-            new.next = self.index(i).next
-            new.next.prev = new
+            new.next = self.index(i+1)
+            self.index(i).next = new
+            self.index(i+1).prev = new
         self.length += 1 # keep track of list length
     def delete(self, i):
         """ deletes a node at a given index
@@ -86,47 +88,96 @@ class DLL:
         sum = 0
         for i in range(self.length):
             for j in range(i+1, self.length):
-                print("index value: ",self.index(i).val, ", ", self.index(j).val)
                 sum += self.index(i).val*self.index(j).val
         return sum
 
-
-
-llone = DLL()
-
-# llone.insert(b, 1)
-llone.push(Node(1))
-llone.push(Node(2))
-llone.push(Node(3))
-
-
-# llone.insert(Node(10), 1)
-
-
-print("length: ",llone.length)
-print("head value: ", llone.head.val)
-print("head.prev: ", llone.head.prev)
-print("head.next: ", llone.head.next)
-print("tail value: ", llone.tail.val)
-print("tail.prev: ", llone.tail.prev)
-print("tail.next: ", llone.tail.next)
-
-print("\n \n")
-for i in range(llone.length):
-    print("List value ", i, " is ", llone.index(i).val)
-    print("List prev ", i, " is ", llone.index(i).prev)
-    print("List next ", i, " is ", llone.index(i).next)
-    print("\n")
-
-print("multiplyAllPairs: ", llone.multiplyAllPairs())
-
-# print("result of multiplyAllPairs: ", llone.multiplyAllPairs())
+"""
+Testing
+"""
 
 import pytest
 
 def test_function():
-    assert llone.index(2).val == 3, "push() test failed"
+    """ tests all functions of DLL
+    """
+    llone = DLL() # create DLL for testing
+    llone.push(Node(1))
+    llone.push(Node(2))
+    llone.push(Node(3))
+    assert llone.length == 3, "length test failed"
+    assert(llone.index(0)).val == 3, "push and index test failed"
+    assert llone.index(2).val == 1, "push test failed"
+    assert llone.multiplyAllPairs() == 11, "multiplyAllPairs test failed"
+    llone.insert(Node(10), 1)
+    assert llone.index(2).val == 10, "insert test failed"
+    llone.delete(2)
+    assert llone.index(2).val == 1, "delete test failed"
+
+test_function()
 
 
+"""
+Timing
+"""
 
-# test_function()
+import timeit
+import random
+import matplotlib.pyplot as plt
+import numpy as np
+
+def make_DLL(n):
+    """ creates a doubly linked list with n nodes
+    """
+    l = DLL()
+    for i in range(n):
+        # add n nodes to DLL, each with value of i (0, 1, 2, 3, ...)
+        l.push(Node(i))
+    return l
+
+
+lltwo = make_DLL(10000)
+n = 10000
+t = timeit.Timer('lltwo.index(random.randrange(10, 10000))', 'import random',
+    globals=locals())
+output = t.timeit(50) # times the operation 50 times and averages
+
+def time_index():
+
+    lltwo = make_DLL(10000)
+    x_vals = []
+    y_vals = []
+
+    for i in range(1000):
+        x = random.randint(10, 10000)
+        x_vals.append(x)
+        t = timeit.Timer('lltwo.index(x)', globals=locals())
+        y_vals.append(t.timeit(1))
+
+    plt.scatter(x_vals, y_vals)
+    plt.show()
+    """this plot shows a slight postive trend with lots of points above the
+    rest, which are slightly like outliers, except that there are so many 
+    """
+
+
+def time_multiply():
+    lltwo = make_DLL(100)
+    x_vals = []
+    y_vals = []
+
+    for i in range(500):
+        x = random.randint(10, 100)
+        x_vals.append(x)
+        t = timeit.Timer('lltwo.multiplyAllPairs()', globals=locals())
+        y_vals.append(t.timeit(1))
+
+    plt.scatter(x_vals, y_vals)
+    plt.show()
+    """ there seems to be a slight positive trend but with a couple outliers
+    at much lower numbers
+    """
+
+time_multiply()
+
+
+#matplotlib
