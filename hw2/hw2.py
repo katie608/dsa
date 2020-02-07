@@ -97,7 +97,6 @@ class DLL:
                 # print(curr1.val, curr2.val)
                 sum += curr1.val*curr2.val
             curr1 = curr1.next
-            curr2 = curr2.next
         return sum
 
 """
@@ -159,9 +158,9 @@ def time_dll_index(l):
         x = random.randint(10, 10000) # randomly select an x value
         x_vals.append(x)
         t = timeit.Timer('l.index(x)','import random', globals=locals())
-        y_vals.append(t.timeit(10))
+        y_vals.append(t.timeit(50))
 
-    plt.scatter(x_vals, y_vals)
+    plot = plt.scatter(x_vals, y_vals)
     plt.show()
 
 
@@ -171,11 +170,11 @@ def time_list_index(l):
     x_vals = []
     y_vals = []
 
-    for i in range(100):
+    for i in range(1000):
         x = random.randint(10, 10000) # randomly select an x value
         x_vals.append(x)
         t = timeit.Timer('l[x]','import random', globals=locals())
-        y_vals.append(t.timeit(10))
+        y_vals.append(t.timeit(50))
 
     plt.scatter(x_vals, y_vals)
     plt.show()
@@ -183,20 +182,20 @@ def time_list_index(l):
 # time_list_index(make_list(10000))
 
 def time_multiply():
-    lltwo = make_DLL(500)
     x_vals = []
     y_vals = []
 
-    for i in range(30):
-        x = random.randint(10, 100)
+    for i in range(50):
+        x = random.randint(10, 1000) # randomly select an x value
+        l = make_DLL(x)
         x_vals.append(x)
-        t = timeit.Timer('lltwo.multiplyAllPairs()','import random',
-            globals=locals())
-        # print(t.timeit(10))
-        y_vals.append(t.timeit(10))
+        t = timeit.Timer('l.multiplyAllPairs()','import random', globals=locals())
+        r = t.timeit(20)
+        print(x,", ", r)
+        y_vals.append(r)
 
-    plt.scatter(x_vals, y_vals)
+    plot = plt.scatter(x_vals, y_vals)
     plt.show()
 
 
-# time_multiply()
+time_multiply()
