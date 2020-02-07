@@ -59,19 +59,21 @@ class DLL:
     def insert(self, new, i):
         """  insert a new node after a given node
         """
-        new.prev = self.index(i)
-        if self.index(i).next is None:
+        before = self.index(i)
+        after = before.next
+        new.prev = before
+        if before.next is None:
             self.tail = new
         else:
-            new.next = self.index(i+1)
-            self.index(i).next = new
-            self.index(i+1).prev = new
+            new.next = after
+            before.next = new
+            after.prev = new
         self.length += 1 # keep track of list length
     def delete(self, i):
         """ deletes a node at a given index
         """
         before = self.index(i-1)
-        after = self.index(i+1)
+        after = before.next.next
         if i == 0:
             self.head = after
         else:
@@ -86,9 +88,16 @@ class DLL:
         of different nodes
         """
         sum = 0
+        curr1 = self.head
+        curr2 = self.head
         for i in range(self.length):
-            for j in range(i+1, self.length):
-                sum += self.index(i).val*self.index(j).val
+            curr2 = curr1
+            for j in range(i, self.length-1):
+                curr2 = curr2.next
+                # print(curr1.val, curr2.val)
+                sum += curr1.val*curr2.val
+            curr1 = curr1.next
+            curr2 = curr2.next
         return sum
 
 """
@@ -134,50 +143,60 @@ def make_DLL(n):
         l.push(Node(i))
     return l
 
+def make_list(n):
+    """ creates a python list with n elements
+    """
+    l = []
+    for i in range(n):
+        l.append(i)
+    return l
 
-lltwo = make_DLL(10000)
-n = 10000
-t = timeit.Timer('lltwo.index(random.randrange(10, 10000))', 'import random',
-    globals=locals())
-output = t.timeit(50) # times the operation 50 times and averages
-
-def time_index():
-
-    lltwo = make_DLL(10000)
+def time_dll_index(l):
     x_vals = []
     y_vals = []
 
-    for i in range(1000):
-        x = random.randint(10, 10000)
+    for i in range(100):
+        x = random.randint(10, 10000) # randomly select an x value
         x_vals.append(x)
-        t = timeit.Timer('lltwo.index(x)', globals=locals())
-        y_vals.append(t.timeit(1))
+        t = timeit.Timer('l.index(x)','import random', globals=locals())
+        y_vals.append(t.timeit(10))
 
     plt.scatter(x_vals, y_vals)
     plt.show()
-    """this plot shows a slight postive trend with lots of points above the
-    rest, which are slightly like outliers, except that there are so many 
-    """
 
+
+# time_dll_index(make_DLL(10000))
+
+def time_list_index(l):
+    x_vals = []
+    y_vals = []
+
+    for i in range(100):
+        x = random.randint(10, 10000) # randomly select an x value
+        x_vals.append(x)
+        t = timeit.Timer('l[x]','import random', globals=locals())
+        y_vals.append(t.timeit(10))
+
+    plt.scatter(x_vals, y_vals)
+    plt.show()
+
+# time_list_index(make_list(10000))
 
 def time_multiply():
-    lltwo = make_DLL(100)
+    lltwo = make_DLL(500)
     x_vals = []
     y_vals = []
 
-    for i in range(500):
+    for i in range(30):
         x = random.randint(10, 100)
         x_vals.append(x)
-        t = timeit.Timer('lltwo.multiplyAllPairs()', globals=locals())
-        y_vals.append(t.timeit(1))
+        t = timeit.Timer('lltwo.multiplyAllPairs()','import random',
+            globals=locals())
+        # print(t.timeit(10))
+        y_vals.append(t.timeit(10))
 
     plt.scatter(x_vals, y_vals)
     plt.show()
-    """ there seems to be a slight positive trend but with a couple outliers
-    at much lower numbers
-    """
-
-time_multiply()
 
 
-#matplotlib
+# time_multiply()
