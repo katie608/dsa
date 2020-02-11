@@ -25,7 +25,7 @@ import pytest
 def test_function():
 	assert longest_increasing_sequence([3, 1, 2, 3, 5, 8, 2]) == [1, 2, 3, 5, 8],"test failed"
 	assert longest_increasing_sequence([1, 2, 0, 4, 8, 9, 3]) == [0, 4, 8, 9],"test failed"
-	assert longest_increasing_sequence([]) == [],"test failed"
+	assert longest_increasing_sequence([]) == [0],"test failed"
 	assert longest_increasing_sequence([2,3,5,7,11,13,17,19,23,29,31,37,41,43,47]) == [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47],"test failed"
 	assert longest_increasing_sequence([4, 3, 0, 0]) == [0],"test failed"
 	assert longest_increasing_sequence([1, 2, 3, 4, 5, 6, 3, 4, 5]) == [1, 2, 3, 4, 5, 6],"test failed"
