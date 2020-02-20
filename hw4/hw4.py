@@ -68,14 +68,49 @@ test_function()
 
 import random
 
-avglen = 0
-for i in range (100):
-    l = []
+def four():
+    avglen = 0
+    avgval = 0
     for i in range (100):
-        l.append(random.randint(-10, 10))
-    b = best_interval(l)[0]
-    # print("Answer: ", b)
-    print("Length: ", len(b))
-    avglen += len(b)/100
+        l = []
+        for i in range (100):
+            l.append(random.randint(-10, 10))
+        b = best_interval(l)[0]
+        print("Length: ", len(b))
+        avglen += len(b)/100
+        avgval += sum(b)/100
+    print("Average Length: ", avglen)
+    print("Average Value: ", avgval)
 
-print("Average Length: ", avglen)
+
+"""
+5.
+"""
+
+import numpy as np
+
+def five():
+    avglen = 0
+    avgval = 0
+    for i in range (100):
+        l = []
+        # np.random.normal(mu, sigma, number)
+        # mu is mean, sigma is standard deviation
+        npl1 = np.random.normal(6, 1, 70)
+        npl2 = np.random.normal(-7, 0.5, 30)
+        npl = np.concatenate((npl1, npl2), axis=0)
+        np.random.shuffle(npl)
+        print(npl)
+        l = npl.tolist()
+        b = best_interval(l)[0]
+        print("Length: ", len(b))
+        avglen += len(b)/100
+        avgval += sum(b)/100
+    print("Average Length: ", avglen)
+    print("Average Value: ", avgval)
+
+
+
+five()
+
+    
