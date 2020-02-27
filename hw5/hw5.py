@@ -56,27 +56,32 @@ class Heap:
         Rchild = self.getRchild(parent)
         elms = self.list
 
-        if Lchild==None and Rchild==None:
-            return # exit
-
-        """
-        TODO: change code so I swap with smaller child
-        """
-
-        if Rchild != None and elms[parent] > elms[Lchild]:
-            if elms[Lchild] < elms[Rchild]:
+        if Lchild!=None and Rchild!=None: # checks that both children exist
+            # swap with smaller child if child is smaller than parent
+            # 1. Parent is in right place
+            # 2: parent is in wrong place and rchild>= lchild
+            # 3. parent is in wrong place and lchild>rchild
+            if elms[parent] < elms[Lchild] and elms[parent] < elms[Rchild]:
+                return
+            elif elms[Lchild] <= elms[Rchild]:
+                # swap parent with Lchild
                 temp = elms[Lchild]
                 elms[Lchild] = elms[parent]
                 elms[parent] = temp
-            self.sort_heap(Lchild)
-
-
-        if Rchild != None and elms[parent] > elms[Rchild]:
-            if elms[Rchild] < elms[Lchild]:
+                self.sort_heap(Lchild)
+            else:
+                # swap parent with Rchild
                 temp = elms[Rchild]
                 elms[Rchild] = elms[parent]
                 elms[parent] = temp
-            self.sort_heap(Rchild)
+                self.sort_heap(Rchild)
+
+        elif Lchild != None and elms[Lchild] <= elms[parent]:
+            temp = elms[Lchild]
+            elms[Lchild] = elms[parent]
+            elms[parent] = temp
+        else:
+            return # exit
 
     def length(self):
         """
@@ -133,13 +138,13 @@ class Heap:
         then delete the min
         then sort the list
         """
-        copy = self.list
+        copy = self
         sorted = []
-        for i in range(len(copy)):
-            sorted.append(copy[0])
+        for i in range(len(copy.list)):
+            sorted.append(copy.list[0])
             # print(sorted)
             # should I pass in a list for delete min?
-            self.delete_min(copy)
+            copy.delete_min()
         return sorted
 
     def display_heap(self):
@@ -171,13 +176,15 @@ class Heap:
 l = [9, 4, 1, 9]
 import random
 l2 = [5, 6, 7, 5, 6, 3, 4, 5, 4, 4]
-print(l2)
+print("Original list: ", l2)
 
 h = Heap(l2)
-# print(h.list)
+print("Sorted list: ", h.list)
 h.display_heap()
-print(h.sorted_list())
-
+# print(h.sorted_list())
+h.delete_min()
+h.display_heap()
+print(h.list)
 
 """ Hypothesis """
 import pytest
