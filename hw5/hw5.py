@@ -51,20 +51,21 @@ class Heap:
         return i
 
     def sort_heap(self, parent):
-        """Sorts heap, takes in index of parent"""
+        """
+        Sorts heap, takes in index of parent
+        (O(n))
+        """
         Lchild = self.getLchild(parent)
         Rchild = self.getRchild(parent)
         elms = self.list
 
         if Lchild!=None and Rchild!=None: # checks that both children exist
             # swap with smaller child if child is smaller than parent
-            # 1. Parent is in right place
-            # 2: parent is in wrong place and rchild>= lchild
-            # 3. parent is in wrong place and lchild>rchild
             if elms[parent] < elms[Lchild] and elms[parent] < elms[Rchild]:
+                # if parent < than both children, return
                 return
             elif elms[Lchild] <= elms[Rchild]:
-                # swap parent with Lchild
+                # if Lchild <= Rchild, swap parent with Lchild
                 temp = elms[Lchild]
                 elms[Lchild] = elms[parent]
                 elms[parent] = temp
@@ -77,11 +78,13 @@ class Heap:
                 self.sort_heap(Rchild)
 
         elif Lchild != None and elms[Lchild] <= elms[parent]:
+            # if Lchild is only child and Lchild<parent, swap parent with Lchild
             temp = elms[Lchild]
             elms[Lchild] = elms[parent]
             elms[parent] = temp
         else:
-            return # exit
+            # if both children are missing, return/exit
+            return
 
     def length(self):
         """
@@ -94,13 +97,26 @@ class Heap:
         """
         insert a new element into the heap
         (O(log n))
-        TODO
         Put it in last element of list and do something like
         the opposite of sort heap (look at parent, swap with parent if needed
         until you don't need to swap with parent), switch index and recurse
         """
+        self.list.append(value) # add new item to end of list
+        curr = len(self.list)-1 # set curr to item that was just appended
+        parent = self.getParent(curr) # get index of parent of curr
 
-        pass
+        while self.list[curr] < self.list[parent]:
+            self.display_heap()
+            print("curr, parent:", curr, parent)
+            temp = self.list[curr]
+            self.list[curr] = self.list[parent]
+            self.list[parent] = temp
+            if parent>0:
+                curr = parent
+                parent = self.getParent(curr)
+            else:
+                return
+
 
     def find_min(self):
         """
@@ -113,37 +129,33 @@ class Heap:
         """
         delete the minimum value element in the heap
         (O(log n))
-        TODO
         swap first and last element in list, delete new last element
         Then swap using sort_heap with index 0
         """
         # put copy of last item of list at top, overwriting min
         self.list[0] = self.list[len(self.list)-1]
+
         # delete last item of list
         self.list.pop()
 
-        print(self.list)
+        # sort heap starting at top, which sends element down
         self.sort_heap(0)
-        print(self.list)
 
     def sorted_list(self):
         """
         returns a new list containing all the elements from min to max
         (O(n log n))
-        TODO
         break down the tree from above
-        make a copy of the heap
-        then destroy the copy
+        make a copy of the heap so you can modify the copy
         return the min (add it to the list)
         then delete the min
         then sort the list
         """
         copy = self
         sorted = []
+        # continuously return the min, add min to sorted[], then delete min
         for i in range(len(copy.list)):
             sorted.append(copy.list[0])
-            # print(sorted)
-            # should I pass in a list for delete min?
             copy.delete_min()
         return sorted
 
@@ -160,10 +172,10 @@ class Heap:
 
         id = 0 # indexing variable
         for i in range(height): # iterates over each row
-            edge_spaces = 2**(height-i-1)-1 # calculates spaces
-            in_spaces = 2**(height-i)-1
-            mid_text = ""
-            for j in range(2**i): # iterates
+            edge_spaces = 2**(height-i-1)-1 # calculates spaces on edge
+            in_spaces = 2**(height-i)-1 # calculates spaces between elements
+            mid_text = "" # initializes empty string for middle text
+            for j in range(2**i): # iterates through all elements on a row
                 mid_text+= str(self.list[id])
                 mid_text+= in_spaces*" "
                 id+=1
@@ -182,9 +194,11 @@ h = Heap(l2)
 print("Sorted list: ", h.list)
 h.display_heap()
 # print(h.sorted_list())
-h.delete_min()
+# h.delete_min()
+h.insert(3)
+print("After insert: ", h.list)
 h.display_heap()
-print(h.list)
+
 
 """ Hypothesis """
 import pytest
