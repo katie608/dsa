@@ -106,8 +106,6 @@ class Heap:
         parent = self.getParent(curr) # get index of parent of curr
 
         while self.list[curr] < self.list[parent]:
-            self.display_heap()
-            print("curr, parent:", curr, parent)
             temp = self.list[curr]
             self.list[curr] = self.list[parent]
             self.list[parent] = temp
@@ -151,6 +149,8 @@ class Heap:
         then delete the min
         then sort the list
         """
+        if self.list == []:
+            return None
         copy = self
         sorted = []
         # continuously return the min, add min to sorted[], then delete min
@@ -188,16 +188,20 @@ class Heap:
 l = [9, 4, 1, 9]
 import random
 l2 = [5, 6, 7, 5, 6, 3, 4, 5, 4, 4]
+
+l2 = []
 print("Original list: ", l2)
 
 h = Heap(l2)
-print("Sorted list: ", h.list)
+print("Heap: ", h.list)
 h.display_heap()
 # print(h.sorted_list())
 # h.delete_min()
-h.insert(3)
-print("After insert: ", h.list)
-h.display_heap()
+# h.insert(3)
+# print("After insert: ", h.list)
+# h.display_heap()
+
+print(min(l2), h.return_min())
 
 
 """ Hypothesis """
@@ -205,9 +209,44 @@ import pytest
 from hypothesis import given
 import hypothesis.strategies as st
 
-@given(st.lists(st.integers()))
+@given(st.lists(st.integers())) # gives you a random list of integers
 def test_heap_len(l):
-    h = Heap(l)
-    h.display_heap()
+    h = Heap(l) # make random list of integers into a heap
     print(len(l), h.length())
     assert len(l) == h.length()
+
+@given(st.lists(st.integers()))
+def test_heap_add_delete_min(l):
+    """
+    test sequentially inserting integers into a
+    heap and then sequentially deleting the minimum until the heap is empty.
+    """
+    h = Heap([])
+    for i in range(len(l)):
+        h.insert(l[i])
+    print(min(l), h.find_min())
+    assert min(l) == h.find_min()
+    for i in range(len(l)):
+        h.delete_min()
+    assert h.list == []
+
+@given(st.lists(st.integers()))
+def test_heap_init_delete(l):
+    """
+    test initializing a heap with a list and then
+    sequentially deleting the minimum until the heap is empty
+    """
+    h = Heap(l)
+    for i in range(len(l)):
+        h.delete_min()
+    assert h.list == []
+
+@given(st.lists(st.integers()))
+def test_heap_sort(l):
+    """
+    test initializing a heap with a list and then
+    returning a sorted version of that list.
+    """
+    h = Heap(l)
+    print(l.sort(), h.sorted_list())
+    assert l.sort() == h.sorted_list()
