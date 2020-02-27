@@ -63,17 +63,19 @@ class Heap:
         TODO: change code so I swap with smaller child
         """
 
-        if elms[parent] > elms[Lchild]:
-            temp = elms[Lchild]
-            elms[Lchild] = elms[parent]
-            elms[parent] = temp
+        if Rchild != None and elms[parent] > elms[Lchild]:
+            if elms[Lchild] < elms[Rchild]:
+                temp = elms[Lchild]
+                elms[Lchild] = elms[parent]
+                elms[parent] = temp
             self.sort_heap(Lchild)
 
 
         if Rchild != None and elms[parent] > elms[Rchild]:
-            temp = elms[Rchild]
-            elms[Rchild] = elms[parent]
-            elms[parent] = temp
+            if elms[Rchild] < elms[Lchild]:
+                temp = elms[Rchild]
+                elms[Rchild] = elms[parent]
+                elms[parent] = temp
             self.sort_heap(Rchild)
 
     def length(self):
@@ -82,6 +84,7 @@ class Heap:
         (O(1))
         """
         return len(self.list)
+
     def insert(self, value):
         """
         insert a new element into the heap
@@ -93,12 +96,14 @@ class Heap:
         """
 
         pass
+
     def find_min(self):
         """
         return the minimum value (root) in the heap
         (O(1))
         """
         return self.list[0]
+
     def delete_min(self):
         """
         delete the minimum value element in the heap
@@ -107,7 +112,15 @@ class Heap:
         swap first and last element in list, delete new last element
         Then swap using sort_heap with index 0
         """
-        pass
+        # put copy of last item of list at top, overwriting min
+        self.list[0] = self.list[len(self.list)-1]
+        # delete last item of list
+        self.list.pop()
+
+        print(self.list)
+        self.sort_heap(0)
+        print(self.list)
+
     def sorted_list(self):
         """
         returns a new list containing all the elements from min to max
@@ -117,11 +130,18 @@ class Heap:
         make a copy of the heap
         then destroy the copy
         return the min (add it to the list)
-        then delete the min 
+        then delete the min
         then sort the list
-
         """
-        pass
+        copy = self.list
+        sorted = []
+        for i in range(len(copy)):
+            sorted.append(copy[0])
+            # print(sorted)
+            # should I pass in a list for delete min?
+            self.delete_min(copy)
+        return sorted
+
     def display_heap(self):
         """
         prints heap in a friendly manner
@@ -155,11 +175,8 @@ print(l2)
 
 h = Heap(l2)
 # print(h.list)
-# while len(h.list) > 0:
-#     h.display_heap()
-#     h.list.pop()
-# h.display_heap()
-# print(h.root)
+h.display_heap()
+print(h.sorted_list())
 
 
 """ Hypothesis """
