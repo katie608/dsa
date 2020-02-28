@@ -5,7 +5,6 @@ Implementation of a Minimum Heap
 import pytest
 from hypothesis import given
 import hypothesis.strategies as st
-
 import math
 
 class Heap:
@@ -101,10 +100,12 @@ class Heap:
         the opposite of sort heap (look at parent, swap with parent if needed
         until you don't need to swap with parent), switch index and recurse
         """
+        print("List before insert: ", self.list)
         self.list.append(value) # add new item to end of list
+        if len(self.list) == 1:
+            return # exit after just inserting one element if list was empty
         curr = len(self.list)-1 # set curr to item that was just appended
         parent = self.getParent(curr) # get index of parent of curr
-
         while self.list[curr] < self.list[parent]:
             temp = self.list[curr]
             self.list[curr] = self.list[parent]
@@ -114,13 +115,15 @@ class Heap:
                 parent = self.getParent(curr)
             else:
                 return
-
+        print("List after insert: ", self.list)
 
     def find_min(self):
         """
         return the minimum value (root) in the heap
         (O(1))
         """
+        if self.list == []:
+            return None
         return self.list[0]
 
     def delete_min(self):
@@ -185,8 +188,8 @@ class Heap:
             print(" "*edge_spaces, mid_text, "\n")
 
 
+"""Unoffical Testing"""
 l = [9, 4, 1, 9]
-import random
 l2 = [5, 6, 7, 5, 6, 3, 4, 5, 4, 4]
 
 l2 = []
@@ -197,11 +200,14 @@ print("Heap: ", h.list)
 h.display_heap()
 # print(h.sorted_list())
 # h.delete_min()
+# h.insert(2)
+# h.insert(1)
 # h.insert(3)
+
 # print("After insert: ", h.list)
 # h.display_heap()
 
-print(min(l2), h.return_min())
+# print("min:", h.find_min())
 
 
 """ Hypothesis """
@@ -221,14 +227,18 @@ def test_heap_add_delete_min(l):
     test sequentially inserting integers into a
     heap and then sequentially deleting the minimum until the heap is empty.
     """
-    h = Heap([])
-    for i in range(len(l)):
-        h.insert(l[i])
-    print(min(l), h.find_min())
-    assert min(l) == h.find_min()
-    for i in range(len(l)):
-        h.delete_min()
-    assert h.list == []
+    if len(l) >= 1: # it fails if list is [] because the min(list) function in
+    # python throws an error, and my functions do not. I manually tested this
+    # case, and found that my function returns None when it tries to find the
+    # min of an empty list, which is an outcome that I am happy with
+        h = Heap([])
+        for i in range(len(l)):
+            h.insert(l[i])
+        print(min(l), h.find_min())
+        assert min(l) == h.find_min()
+        for i in range(len(l)):
+            h.delete_min()
+        assert h.list == []
 
 @given(st.lists(st.integers()))
 def test_heap_init_delete(l):
