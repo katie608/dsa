@@ -152,9 +152,7 @@ class Heap:
         then delete the min
         then sort the list
         """
-        if self.list == []:
-            return None
-        copy = self
+        copy = Heap(self.list[:])
         sorted = []
         # continuously return the min, add min to sorted[], then delete min
         for i in range(len(copy.list)):
@@ -190,14 +188,20 @@ class Heap:
 
 """Unoffical Testing"""
 l = [9, 4, 1, 9]
-l2 = [5, 6, 7, 5, 6, 3, 4, 5, 4, 4]
-
-l2 = []
+l2 = [5, 6, 7, 5, 6, 3, -4, 5, 4, 4, 9, 4, 1, 9]
 print("Original list: ", l2)
 
 h = Heap(l2)
 print("Heap: ", h.list)
 h.display_heap()
+print(l2)
+print(sorted(l2), h.sorted_list())
+
+
+# print(h.sorted_list())
+# h.display_heap()
+
+# print(h.list)
 # print(h.sorted_list())
 # h.delete_min()
 # h.insert(2)
@@ -258,5 +262,4 @@ def test_heap_sort(l):
     returning a sorted version of that list.
     """
     h = Heap(l)
-    print(l.sort(), h.sorted_list())
-    assert l.sort() == h.sorted_list()
+    assert sorted(l) == h.sorted_list()
