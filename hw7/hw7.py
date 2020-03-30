@@ -88,7 +88,7 @@ def generate_random_graphs():
 
 def graph_smallest_prob():
     x, y = generate_random_graphs()
-    plot = plt.scatter(x, y)
+    plot = plt.plot(x, y)
 
 
     plt.show()
