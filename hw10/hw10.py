@@ -5,6 +5,7 @@ Katie Foster
 
 import numpy as np
 import time
+import timeit
 
 def read_tsp(filename):
     ''' Reads a TSPLIB instance given by filename and returns the corresponding
@@ -41,7 +42,7 @@ def get_distance(C, path):
     dist = 0
     for i in range(len(path)-1):
         dist += C[path[i], path[i+1]]
-    dist += C[path[len(path)-1], path[0]] 
+    dist += C[path[len(path)-1], path[0]]
     return dist
 
 
@@ -118,11 +119,18 @@ def test():
         path, heuristic_dist = greedyHeuristic(C, n)
         print("Distance from Greedy Heuristic:", heuristic_dist)
         print("Greedy Heuristic optimality ratio:", (heuristic_dist-optimal_dist)/optimal_dist)
+        t = timeit.Timer('greedyHeuristic(C, n)', globals=globals())
+        print("Time of Greedy Heuristic:", t.timeit(20))
         local_dist = localSearch(C, path)[1]
         print("Distance from Local Search:", local_dist)
         print("Local Search optimality ratio:", (local_dist-optimal_dist)/optimal_dist)
+        t = timeit.Timer('localSearch(C, path)', globals=globals())
+        print("Time of Local Search:", t.timeit(20))
         print("Optimal Distance:", optimal_dist)
         print("")
+
+# import __builtin__
+# __builtin__.__dict__.update(locals())
 
 test()
 
@@ -132,33 +140,44 @@ Results from test:
 gr17.tsp :
 Distance from Greedy Heuristic: 4865.0
 Greedy Heuristic optimality ratio: 1.3333333333333333
+Time of Greedy Heuristic: 0.0014523319550789893
 Distance from Local Search: 4220
 Local Search optimality ratio: 1.023980815347722
+Time of Local Search: 1.370985360990744
 Optimal Distance: 2085
 
 gr21.tsp :
 Distance from Greedy Heuristic: 7320.0
 Greedy Heuristic optimality ratio: 1.7041004802364241
+Time of Greedy Heuristic: 0.0014145320164971054
 Distance from Local Search: 5422
 Local Search optimality ratio: 1.0029553010712966
+Time of Local Search: 1.4083389870356768
 Optimal Distance: 2707
 
 gr24.tsp :
 Distance from Greedy Heuristic: 3446.0
 Greedy Heuristic optimality ratio: 1.7091194968553458
+Time of Greedy Heuristic: 0.0014453090261667967
 Distance from Local Search: 2784
 Local Search optimality ratio: 1.1886792452830188
+Time of Local Search: 1.4419725780026056
 Optimal Distance: 1272
 
 gr48.tsp :
 Distance from Greedy Heuristic: 19273.0
 Greedy Heuristic optimality ratio: 2.8194609591755846
+Time of Greedy Heuristic: 0.0015203019720502198
 Distance from Local Search: 15128
 Local Search optimality ratio: 1.9980182322631788
+Time of Local Search: 1.3918146709911525
 Optimal Distance: 5046
+
+
 
 It seems like my greedy heurisitc algorithm does a decent job with smaller
 datasets, but does a really bad job with big sets. Also the local search
-helps optimize the algorithm in every instance, which is good.
+helps optimize the algorithm in every instance, which is good.The local search
+however takes quite a while, while the greedy heuristic is very fast.
 
 """
