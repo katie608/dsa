@@ -91,7 +91,6 @@ def localSearch(C, curr_path):
                 new_path[k-1] = curr_path[k]
                 new_path[k] = curr_path[k-1]
                 new_dist = get_distance(C, new_path)
-                # check to make sure it is not added twice?
                 if new_dist < curr_dist and len(set(new_path)) ==  len(new_path):
                     curr_path = new_path
                     curr_dist = new_dist
